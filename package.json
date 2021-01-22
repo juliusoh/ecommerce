@@ -1,0 +1,40 @@
+{
+  "name": "mern-e-commerce",
+  "version": "1.0.0",
+  "description": "e commerce app",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "mongoose": "^5.11.12",
+    "react-bootstrap": "^1.4.3"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.7"
+  },
+  "scripts": {
+    "start": "nodemon backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\" ",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "data:import": "node backend/seeder",
+    "data:destroy": "node backend/seeder -d"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juliusoh/ecommerce.git"
+  },
+  "author": "Julius Oh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juliusoh/ecommerce/issues"
+  },
+  "homepage": "https://github.com/juliusoh/ecommerce#readme"
+}
