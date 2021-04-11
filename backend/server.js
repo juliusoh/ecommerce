@@ -1,10 +1,12 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const { notFound, errorHandler } = require('./middleware/errorMiddleware')
-const connectDB = require("./config/db.js");
-const colors = require("colors");
+import express from "express";
+import dotenv from "dotenv";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import connectDB from "./config/db.js";
+import colors from "colors";
 
-const productRoutes = require("./routes/productRoutes");
+import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 
@@ -12,18 +14,21 @@ connectDB();
 
 const app = express();
 
-var cors = require("cors");
+app.use(express.json());
 
+app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
+
+import cors from "cors";
 app.use(cors()); // Use this after the variable declaration
 
 app.get("/", (req, res) => {
   res.send("API IS RUNNING");
 });
 
-app.use("/api/products", productRoutes);
-
-app.use(notFound)
-app.use(errorHandler)
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
