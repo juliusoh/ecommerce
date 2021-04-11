@@ -8,6 +8,7 @@ import {
 } from "../constants/productConstants";
 // reducer takes in initial state, and action
 export const productListReducer = (state = { products: [] }, action) => {
+  
   switch (action.type) {
     case PRODUCT_LIST_REQUEST:
       return { loading: true, products: [] };
