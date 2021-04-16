@@ -77,6 +77,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+
 // @desc To Update User Profile
 // @route PUT /api/users/profile
 // @access Private
