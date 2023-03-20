@@ -1,0 +1,42 @@
+name: Docker Build/Push and Deploy 
+
+on : 
+  push : 
+    branches : 
+      -  master 
+  pull_request : 
+    branches : 
+      -  master
+
+env:
+  ECR_REPOSITORY: juliusoh
+
+jobs: 
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build and tag and push Docker image Backend
+        env: 
+          ECR_REGISTIRY: ${{ steps.login-ecr.outputs.registry }}  
+        run: |
+          docker build -t $ECR_REGISTIRY/$ECR_REPOSITORY:ecommerce-api-$GITHUB_SHA .
+          docker push $ECR_REGISTIRY/$ECR_REPOSITORY:ecommerce-api-$GITHUB_SHA
+      - name: Build and tag and push Docker image Backend
+        env: 
+          ECR_REGISTIRY: ${{ steps.login-ecr.outputs.registry }}  
+        run: |
+          cd frontend
+          docker build -t $ECR_REGISTIRY/$ECR_REPOSITORY:ecommerce-web-$GITHUB_SHA .
+          docker push $ECR_REGISTIRY/$ECR_REPOSITORY:ecommerce-web-$GITHUB_SHA
