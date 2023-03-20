@@ -3,7 +3,7 @@ A E-Commerce app that uses MERN stack
 
 
 ## Live Demo
-[Link to Live Site](https://fakebuyapp.herokuapp.com/)
+[Link to Live Site](https://ecommerce.juliusoh.com/)
 
 ## Features
 Users can view list of products for sale, write a review, register an account, see number of reviews, add item to cart, remove item from cart, checkout using PayPal API, 
