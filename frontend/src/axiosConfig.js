@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://api.ecommerce.juliusoh.com',
+  baseURL: 'https://ecommerce-api.juliusoh.com',
 });
 
 export default api;

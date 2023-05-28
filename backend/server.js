@@ -8,11 +8,14 @@ import morgan from "morgan";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import cors from "cors";
 import uploadRoutes from "./routes/uploadRoutes.js";
 
 dotenv.config();
 
 connectDB();
+
+app.use(cors()); // Use this after the variable declaration
 
 const app = express();
 
@@ -36,9 +39,6 @@ app.use("/uploads", express.static(path.join(__dirname)));
 
 app.use(notFound);
 app.use(errorHandler);
-
-import cors from "cors";
-app.use(cors()); // Use this after the variable declaration
 
 app.get("/", (req, res) => {
   res.send("API IS RUNNING");
