@@ -15,8 +15,6 @@ dotenv.config();
 
 connectDB();
 
-
-
 const app = express();
 
 if (process.env.NODE_ENV === 'development') {
@@ -24,6 +22,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use(cors()); // Use this after the variable declaration
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.send('API IS RUNNING');
+});
 
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
@@ -37,10 +39,6 @@ app.use('/uploads', express.static(path.join(__dirname)));
 
 app.use(notFound);
 app.use(errorHandler);
-
-app.get('/', (req, res) => {
-  res.send('API IS RUNNING');
-});
 
 const PORT = process.env.PORT || 5000;
 
