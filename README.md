@@ -1,7 +1,6 @@
 # E-Commerce App
 A E-Commerce app that uses MERN stack
 
-
 ## Live Demo
 [Link to Live Site](https://ecommerce.juliusoh.com/)
 
