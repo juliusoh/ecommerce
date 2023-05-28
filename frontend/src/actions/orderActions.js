@@ -1,3 +1,4 @@
+import api from "../axiosConfig";
 import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
@@ -18,7 +19,6 @@ import {
   ORDER_DELIVER_SUCCESS,
   ORDER_DELIVER_FAIL,
 } from "../constants/orderConstants";
-import axios from "axios";
 import { logout } from "./userActions";
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -38,7 +38,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.post(`/api/orders`, order, config);
+    const { data } = await api.post(`/api/orders`, order, config);
     console.log("order", order);
     console.log("data", data);
     dispatch({
@@ -72,7 +72,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/orders/${id}`, config);
+    const { data } = await api.get(`/api/orders/${id}`, config);
 
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
@@ -109,7 +109,7 @@ export const payOrder = (orderId, paymentResult) => async (
       },
     };
 
-    const { data } = await axios.put(
+    const { data } = await api.put(
       `/api/orders/${orderId}/pay`,
       paymentResult,
       config
@@ -149,7 +149,7 @@ export const deliverOrder = (orderId) => async (
       },
     };
 
-    const { data } = await axios.put(
+    const { data } = await api.put(
       `/api/orders/${orderId._id}/deliver`, {},
       config
     );
@@ -185,7 +185,7 @@ export const listMyOrders = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/orders/myorders`, config);
+    const { data } = await api.get(`/api/orders/myorders`, config);
 
     dispatch({
       type: ORDER_LIST_MY_SUCCESS,
@@ -222,7 +222,7 @@ export const listOrders = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/orders/myorders`, config);
+    const { data } = await api.get(`/api/orders/myorders`, config);
 
     dispatch({
       type: ORDER_LIST_SUCCESS,
