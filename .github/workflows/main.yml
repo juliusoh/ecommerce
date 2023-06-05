@@ -84,5 +84,5 @@ jobs:
         run: |
           git config --global user.email "juliusoh@gmail.com"
           git config --global user.name "juliusoh"
-          git commit -m "Update image tag from reference ${{ github.sha }}"
+          git commit -m "Update ${{ github.repository }} image tag from reference ${{ github.sha }}"
           git push
