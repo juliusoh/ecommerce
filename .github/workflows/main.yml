@@ -10,6 +10,8 @@ on :
 
 env:
   ECR_REPOSITORY: juliusoh
+  CLIENT_TAG: ecommerce-web-${{ github.sha }}
+  API_TAG: ecommerce-api-${{ github.sha }}
 
 jobs: 
   build-and-push:
@@ -31,12 +33,56 @@ jobs:
         env: 
           ECR_REGISTIRY: ${{ steps.login-ecr.outputs.registry }}  
         run: |
-          docker build -t $ECR_REGISTIRY/$ECR_REPOSITORY:ecommerce-api-$GITHUB_SHA .
-          docker push $ECR_REGISTIRY/$ECR_REPOSITORY:ecommerce-api-$GITHUB_SHA
+          docker build -t $ECR_REGISTIRY/$ECR_REPOSITORY:$API_TAG .
+          docker push $ECR_REGISTIRY/$ECR_REPOSITORY:$API_TAG
       - name: Build and tag and push Docker image Backend
         env: 
           ECR_REGISTIRY: ${{ steps.login-ecr.outputs.registry }}  
         run: |
           cd frontend
-          docker build -t $ECR_REGISTIRY/$ECR_REPOSITORY:ecommerce-web-$GITHUB_SHA .
-          docker push $ECR_REGISTIRY/$ECR_REPOSITORY:ecommerce-web-$GITHUB_SHA
+          docker build -t $ECR_REGISTIRY/$ECR_REPOSITORY:$CLIENT_TAG .
+          docker push $ECR_REGISTIRY/$ECR_REPOSITORY:$CLIENT_TAG
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: 'dest'
+          ref: 'main'
+          repository: 'juliusoh/portfolio-helm-charts'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch   
+      - name: Update Image Tag
+        working-directory: dest
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
+          sudo add-apt-repository ppa:rmescandon/yq
+          sudo apt update
+          sudo apt install yq -y
+          cd ecommerce
+          yq eval ".image.tag = \"$API_TAG\"" -i values.yaml
+          yq eval ".image.clientTag = \"$CLIENT_TAG\"" -i values.yaml
+      - name: Update Git Changes
+        id: newFiles
+        shell: bash
+        working-directory: dest
+        run: |
+          git add -A
+          git status --porcelain | wc -l
+          if [ $(git status --porcelain | wc -l) -gt 0 ]; then
+            echo "::set-output name=changed::true"
+          else
+            echo "::set-output name=changed::false"
+          fi
+      - name: Commit and Push
+        shell: bash
+        if: steps.newFiles.outputs.changed == 'true'
+        working-directory: dest
+        run: |
+          git config --global user.email "juliusoh@gmail.com"
+          git config --global user.name "juliusoh"
+          git commit -m "Update image tag from reference ${{ github.sha }}"
+          git push
